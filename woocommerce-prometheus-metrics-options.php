@@ -85,13 +85,13 @@ function woocommerce_prometheus_metrics_admin_menu() {
 	global $woocommerce_prometheus_metrics_options_page;
 
 	$woocommerce_prometheus_metrics_options_page = add_options_page(
-		__('Web Request Metrics', 'woocommerce-prometheus-metrics'),
-		__('Web Request Metrics', 'woocommerce-prometheus-metrics'),
+		__('Woocommerce Metrics', 'woocommerce-prometheus-metrics'),
+		__('Woocommerce Metrics', 'woocommerce-prometheus-metrics'),
 		'manage_options',
 		__FILE__,
 		'woocommerce_prometheus_metrics_options_page');
 }
 
-// Hooks to allow Web Request Metrics configuration settings and options to be set
+// Hooks to allow configuration settings and options to be set
 add_action('admin_init', 'woocommerce_prometheus_metrics_admin_init');
 add_action('admin_menu', 'woocommerce_prometheus_metrics_admin_menu');
