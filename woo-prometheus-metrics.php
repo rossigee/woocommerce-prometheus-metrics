@@ -49,8 +49,8 @@ function woocommerce_metrics_handler__handle_request($wp_query) {
     $username = $_SERVER['PHP_AUTH_USER'];
     $password = $_SERVER['PHP_AUTH_PW'];
     if($auth_username != $username || $auth_password != $password) {
-      header('WWW-Authenticate: Basic realm="Woocommerce Metrics"');
       header("HTTP/1.1 401 Unauthorized");
+      header('WWW-Authenticate: Basic realm="Woocommerce Metrics"');
       echo "Authorisation required.";
       exit(0);
     }
@@ -76,6 +76,8 @@ function woocommerce_metrics_handler__handle_request($wp_query) {
   }
 
   header("Content-Type: text/plain");
+  header('Cache-Control: no-cache');
+
 
   woocommerce_metrics_output_metric("woocommerce_product_count",
     "The number of products.",
