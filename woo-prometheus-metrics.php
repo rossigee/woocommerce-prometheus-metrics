@@ -2,15 +2,15 @@
 
 /**
 Plugin Name: Woocommerce Prometheus Metrics
-Plugin URI: https://wordpress.org/plugins/woocommerce-prometheus-metrics
+Plugin URI: https://wordpress.org/plugins/woo-prometheus-metrics
 Description: Plugin to monitor the count of products and orders on a Woocommerce site.
-Version: 0.0.1
+Version: 0.0.2
 Author: Ross Golder <ross@golder.org>
 Author URI: http://www.golder.org/
 License: GPLv2
  */
 
-require_once(dirname(__FILE__) . "/woocommerce-prometheus-metrics-options.php");
+require_once(dirname(__FILE__) . "/woo-prometheus-metrics-options.php");
 
 function woocommerce_metrics_handler_init() {
   add_rewrite_rule('^woocommerce-metrics/?', 'index.php?__woocommerce_metrics=1', 'top');

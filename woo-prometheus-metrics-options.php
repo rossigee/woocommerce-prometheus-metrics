@@ -8,7 +8,7 @@ function woocommerce_prometheus_metrics_options_page() {
 	}
 
 	if (isset($_POST['submit']) && isset($_POST['metricsoptions'])) {
-		check_admin_referer('woocommerce-prometheus-metrics-options');
+		check_admin_referer('woo-prometheus-metrics-options');
 		woocommerce_prometheus_metrics_options_update();
 	}
 
@@ -28,7 +28,7 @@ p.error {
 <form method="post" action="">
 <?php
 if(function_exists('wp_nonce_field') )
-	wp_nonce_field('woocommerce-prometheus-metrics-options');
+	wp_nonce_field('woo-prometheus-metrics-options');
 ?>
 <input type="hidden" name="metricsoptions" value="true"/>
 
@@ -85,8 +85,8 @@ function woocommerce_prometheus_metrics_admin_menu() {
 	global $woocommerce_prometheus_metrics_options_page;
 
 	$woocommerce_prometheus_metrics_options_page = add_options_page(
-		__('Woocommerce Metrics', 'woocommerce-prometheus-metrics'),
-		__('Woocommerce Metrics', 'woocommerce-prometheus-metrics'),
+		__('Woocommerce Metrics', 'woo-prometheus-metrics'),
+		__('Woocommerce Metrics', 'woo-prometheus-metrics'),
 		'manage_options',
 		__FILE__,
 		'woocommerce_prometheus_metrics_options_page');
