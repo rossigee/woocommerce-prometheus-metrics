@@ -85,8 +85,8 @@ function woocommerce_prometheus_metrics_admin_menu() {
 	global $woocommerce_prometheus_metrics_options_page;
 
 	$woocommerce_prometheus_metrics_options_page = add_options_page(
-		__('Woocommerce Metrics', 'woo-prometheus-metrics'),
-		__('Woocommerce Metrics', 'woo-prometheus-metrics'),
+		__('Woo Metrics', 'woo-prometheus-metrics'),
+		__('Woo Metrics', 'woo-prometheus-metrics'),
 		'manage_options',
 		__FILE__,
 		'woocommerce_prometheus_metrics_options_page');
