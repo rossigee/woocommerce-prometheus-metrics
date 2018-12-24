@@ -4,7 +4,7 @@
 * Tags: wordpress
 * Requires at least: 4.7.2
 * Tested up to: 4.9.5
-* Stable tag: 0.0.2
+* Stable tag: 0.0.3
 * License: GPLv2
 
 This plugin provides a Prometheus-compatible metrics endpoint for Woocommerce.
@@ -12,9 +12,8 @@ This plugin provides a Prometheus-compatible metrics endpoint for Woocommerce.
 The metrics it gathers are:
 
 * `woocommerce_product_count` - a count of products listed.
-* `woocommerce_order_count` - a count of orders on the system.
-
-For later version, we might also provide order counts broken down by status.
+* `woocommerce_order_count` - a count of orders on the system, by 'status'.
+* `woocommerce_user_count` - a count of users on the system.
 
 We gather the metrics with the following section of Prometheus configuration:
 
