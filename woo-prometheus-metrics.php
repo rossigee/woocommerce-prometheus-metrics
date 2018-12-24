@@ -40,6 +40,15 @@ function woocommerce_metrics_output_metric($id, $desc, $type, $value) {
   echo "\n";
 }
 
+function woocommerce_metrics_output_order_metrics($id, $desc, $type, $values) {
+  echo "# HELP ".$id." ".$desc."\n";
+  echo "# TYPE ".$id." ".$type."\n";
+  foreach($values as $status => $value) {
+    echo $id."{status=\"".$status."\"} ".$value."\n";
+  }
+  echo "\n";
+}
+
 function woocommerce_metrics_handler__handle_request($wp_query) {
   global $uris_to_check;
 
@@ -63,8 +72,12 @@ function woocommerce_metrics_handler__handle_request($wp_query) {
     $product_count = $_product_count->publish;
   }
 
-  // Gather count of orders
-  $order_count = wc_orders_count("processed");
+  // Gather count of orders by status
+  $order_statuses = array_keys(wc_get_order_statuses());
+  $order_counts = array();
+  foreach($order_statuses as $order_status) {
+    $order_counts[$order_status] = wc_orders_count($order_status);
+  }
 
   // Gather count of users
   $_user_count = count_users();
@@ -85,10 +98,10 @@ function woocommerce_metrics_handler__handle_request($wp_query) {
     $product_count
   );
 
-  woocommerce_metrics_output_metric("woocommerce_order_count",
-    "The number of orders.",
+  woocommerce_metrics_output_order_metrics("woocommerce_order_count",
+    "The number of orders, by status.",
     "gauge",
-    $order_count
+    $order_counts
   );
 
   woocommerce_metrics_output_metric("woocommerce_user_count",
