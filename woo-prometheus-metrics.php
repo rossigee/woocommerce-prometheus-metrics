@@ -76,7 +76,8 @@ function woocommerce_metrics_handler__handle_request($wp_query) {
   $order_statuses = array_keys(wc_get_order_statuses());
   $order_counts = array();
   foreach($order_statuses as $order_status) {
-    $order_counts[$order_status] = wc_orders_count($order_status);
+    $s = substr($order_status, 3); // Drop the 'wc-' prefix
+    $order_counts[$s] = wc_orders_count($s);
   }
 
   // Gather count of users
