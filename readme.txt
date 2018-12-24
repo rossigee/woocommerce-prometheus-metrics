@@ -4,7 +4,7 @@
 * Tags: wordpress
 * Requires at least: 4.7.2
 * Tested up to: 4.9.5
-* Stable tag: 0.0.3
+* Stable tag: 0.0.4
 * License: GPLv2
 
 This plugin provides a Prometheus-compatible metrics endpoint for Woocommerce.

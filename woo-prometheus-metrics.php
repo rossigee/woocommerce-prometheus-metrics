@@ -4,7 +4,7 @@
 Plugin Name: Woocommerce Prometheus Metrics
 Plugin URI: https://wordpress.org/plugins/woo-prometheus-metrics
 Description: Plugin to monitor the count of products and orders on a Woocommerce site.
-Version: 0.0.3
+Version: 0.0.4
 Author: Ross Golder <ross@golder.org>
 Author URI: http://www.golder.org/
 License: GPLv2
