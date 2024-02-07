@@ -3,7 +3,7 @@
 * Contributors: rossigee
 * Tags: wordpress
 * Requires at least: 4.7.2
-* Tested up to: 4.9.5
+* Tested up to: 6.4.3
 * Stable tag: 0.0.4
 * License: GPLv2
 
@@ -37,6 +37,9 @@ We gather the metrics with the following section of Prometheus configuration:
 
 
 == Changelog ==
+
+= 0.2 =
+* More metrics
 
 = 0.1 =
 
