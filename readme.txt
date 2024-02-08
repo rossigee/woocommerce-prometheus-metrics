@@ -14,6 +14,9 @@ The metrics it gathers are:
 * `woocommerce_product_count` - a count of products listed.
 * `woocommerce_order_count` - a count of orders on the system, by 'status'.
 * `woocommerce_user_count` - a count of users on the system.
+* `woocommerce_stock` - the number of items in each stock status (no, low, in stock)
+* `woocommerce_revenue_sum` - The total net revenue (sum of all completed orders)
+* `woocommerce_items_sold_sum` - The total number of sold items (sum of all completed orders)
 
 We gather the metrics with the following section of Prometheus configuration:
 
@@ -39,7 +42,7 @@ We gather the metrics with the following section of Prometheus configuration:
 == Changelog ==
 
 = 0.2 =
-* More metrics
+* More metrics (stock levels, total revenue, number of items sold)
 
 = 0.1 =
 
