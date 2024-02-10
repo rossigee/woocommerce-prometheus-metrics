@@ -12,6 +12,7 @@ License: GPLv2
 
 require_once(dirname(__FILE__) . "/woo-prometheus-metrics-options.php");
 
+
 function woocommerce_metrics_handler_init() {
   add_rewrite_rule('^woocommerce-metrics/?', 'index.php?__woocommerce_metrics=1', 'top');
 }
@@ -51,6 +52,7 @@ function woocommerce_metrics_output_order_metrics($id, $desc, $type, $values) {
 
 function woocommerce_metrics_handler__handle_request($wp_query) {
   global $uris_to_check;
+  global $wpdb;
 
   $auth_username = get_option("woocommerce_metrics_auth_username");
   $auth_password = get_option("woocommerce_metrics_auth_password");
@@ -66,32 +68,7 @@ function woocommerce_metrics_handler__handle_request($wp_query) {
   }
 
   // Gather count of products
-  $product_count = 0;
-  $_product_count = wp_count_posts("product");
-  if(isset($_product_count->publish)) {
-    $product_count = $_product_count->publish;
-  }
-
-  // Gather count of orders by status
-  $order_statuses = array_keys(wc_get_order_statuses());
-  $order_counts = array();
-  foreach($order_statuses as $order_status) {
-    $s = substr($order_status, 3); // Drop the 'wc-' prefix
-    $order_counts[$s] = wc_orders_count($s);
-  }
-
-  // Gather count of users
-  $_user_count = count_users();
-  // Not sure why '$user_count = $_user_count['total_users']' doesn't work!
-  foreach($_user_count as $k => $v) {
-    if($k == 'total_users') {
-      $user_count = $v;
-    }
-  }
-
-  header("Content-Type: text/plain");
-  header('Cache-Control: no-cache');
-
+  $product_count = count(wc_get_products(['return' => 'ids']));
 
   woocommerce_metrics_output_metric("woocommerce_product_count",
     "The number of products.",
@@ -99,16 +76,71 @@ function woocommerce_metrics_handler__handle_request($wp_query) {
     $product_count
   );
 
+  // Gather count of orders by status
+
+  $order_statuses = array_keys(wc_get_order_statuses());
+  $order_counts = array();
+  foreach($order_statuses as $order_status) {
+    $s = substr($order_status, 3); // Drop the 'wc-' prefix
+    $order_counts[$s] = wc_orders_count($s);
+  }
+
   woocommerce_metrics_output_order_metrics("woocommerce_order_count",
     "The number of orders, by status.",
     "gauge",
     $order_counts
   );
 
+  // Gather count of users
+  $_user_count = count_users();
+  $user_count = $_user_count['total_users'];
+
+  header("Content-Type: text/plain");
+  header('Cache-Control: no-cache');
+
+
   woocommerce_metrics_output_metric("woocommerce_user_count",
     "The number of users.",
     "gauge",
     $user_count
+  );
+
+  // Gather stock info
+  $stock   = absint( max( get_option( 'woocommerce_notify_low_stock_amount' ), 1 ) );
+  $nostock = absint( max( get_option( 'woocommerce_notify_no_stock_amount' ), 0 ) );
+  $stock_info = $wpdb->get_row($wpdb->prepare("SELECT
+          sum(case when lookup.stock_quantity <= %d then 1 else 0 end) as no_stock,
+          sum(case when lookup.stock_quantity > %d and lookup.stock_quantity < %d then 1 else 0 end) as low_stock,
+          sum(case when lookup.stock_quantity >= %d then 1 else 0 end) as in_stock
+        FROM {$wpdb->posts} as pos
+        INNER JOIN {$wpdb->wc_product_meta_lookup} AS lookup ON posts.ID = lookup.product_id
+        WHERE posts.post_type IN ( 'product', 'product_variation' )
+          AND posts.post_status = 'publish'",
+				$nostock,
+				$nostock, $stock,
+				$stock,
+		),
+		ARRAY_A);
+  woocommerce_metrics_output_order_metrics("woocommerce_stock",
+    "The number of products in each stock state (no, low, in stock).",
+    "gauge",
+    $stock_info
+  );
+
+  // Gather revenue
+  $revenue = $wpdb->get_var("select sum(net_total) from wp_wc_order_stats where status='wc-completed'");
+  woocommerce_metrics_output_metric("woocommerce_revenue_sum",
+    "The total net revenue (sum of all completed orders).",
+    "gauge",
+    $revenue
+  );
+
+  // items sold
+  $items_sold = $wpdb->get_var("select sum(num_items_sold) from wp_wc_order_stats where status='wc-completed'");
+  woocommerce_metrics_output_metric("woocommerce_items_sold_sum",
+    "The total number of sold items (sum of all completed orders).",
+    "gauge",
+    $items_sold
   );
 
 }
